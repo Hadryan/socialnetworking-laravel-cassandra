@@ -31,7 +31,7 @@ services:
       - "12008:9160"
     volumes:
       - "./cassandra_data:/var/lib/cassandra"
-      - "./db-schema:/docker-entrypoint-initdb.d/"
+      - "./db_schema:/docker-entrypoint-initdb.d/"
     environment:
       - CASSANDRA_RPC_ADDRESS=0.0.0.0
       - CASSANDRA_CONFIG=/root/cassandra/conf
