@@ -9,33 +9,15 @@ services:
   nginx-php:
     image: base_nginx-php
     build: ./install/nginx-php
-  api:
-    image: api
-    build: ./install/api
-    ports:
-      - "12001:80"
-    volumes:
-      - "./api:/var/www/localhost/htdocs"
-    networks:
-      - app-tier
-  background_jobs:
-    image: background_jobs
-    build: ./install/background_jobs
-    ports:
-      - "12002:80"
-    volumes:
-      - "./background_jobs:/var/www/localhost/htdocs"
-    networks:
-      - app-tier
   redis:
-    image: redis
+    container_name: redis
     build: ./install/redis
     ports:
       - "12003:6379"
     networks:
       - app-tier
   cassandra:
-    image: cassandra
+    container_name: cassandra
     build:
       context: ./install/cassandra
       args:
@@ -56,7 +38,7 @@ services:
     networks:
       - app-tier
   rabbitmq:
-    image: rabbitmq
+    container_name: rabbitmq
     build: ./install/rabbitmq
     environment:
       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
@@ -68,5 +50,26 @@ services:
       - "12010:5671"
       - "12011:5672"
       - "12012:15672"
+    networks:
+      - app-tier
+  api:
+    container_name: api
+    build: ./install/api
+    ports:
+      - "12001:80"
+    volumes:
+      - "./api:/var/www/localhost/htdocs"
+    networks:
+      - app-tier
+  background_jobs:
+    container_name: background_jobs
+    build: ./install/background_jobs
+    ports:
+      - "12002:80"
+    volumes:
+      - "./background_jobs:/var/www/localhost/htdocs"
+    depends_on:
+      - cassandra
+      - rabbitmq
     networks:
       - app-tier
