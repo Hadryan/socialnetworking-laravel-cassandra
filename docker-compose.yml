@@ -1,0 +1,72 @@
+version: '3.6'
+networks:
+  app-tier:
+    driver: bridge
+services:
+  base:
+    image: base_alpine
+    build: ./install/alpine
+  nginx-php:
+    image: base_nginx-php
+    build: ./install/nginx-php
+  api:
+    image: api
+    build: ./install/api
+    ports:
+      - "12001:80"
+    volumes:
+      - "./api:/var/www/localhost/htdocs"
+    networks:
+      - app-tier
+  background_jobs:
+    image: background_jobs
+    build: ./install/background_jobs
+    ports:
+      - "12002:80"
+    volumes:
+      - "./background_jobs:/var/www/localhost/htdocs"
+    networks:
+      - app-tier
+  redis:
+    image: redis
+    build: ./install/redis
+    ports:
+      - "12003:6379"
+    networks:
+      - app-tier
+  cassandra:
+    image: cassandra
+    build:
+      context: ./install/cassandra
+      args:
+        CASSANDRA_VERSION: 3.11.3
+        CASSANDRA_HOME: /root/cassandra
+    ports:
+      - "12004:7000"
+      - "12005:7001"
+      - "12006:7199"
+      - "12007:9042"
+      - "12008:9160"
+    volumes:
+      - "./cassandra_data:/var/lib/cassandra"
+      - "./db-schema:/docker-entrypoint-initdb.d/"
+    environment:
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_CONFIG=/root/cassandra/conf
+    networks:
+      - app-tier
+  rabbitmq:
+    image: rabbitmq
+    build: ./install/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "12009:4369"
+      - "12010:5671"
+      - "12011:5672"
+      - "12012:15672"
+    networks:
+      - app-tier
