@@ -110,6 +110,7 @@ class FriendController extends Controller {
                         $this->payload['friends'][] = $fData['email'];
                         }
                     }
+                    $this->payload['count'] = count($this->payload['friends']);
                 }
             } catch (Exception $ex) {
                 $this->status = StatusCode::INTERNAL_ERROR;
