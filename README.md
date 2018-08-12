@@ -1,7 +1,8 @@
 # socialnetworking-laravel-cassandra
 Simple social networking system using Laravel Cassanda RabbitMQ and Redis
 
-#####Specification:
+
+#### Specification:
 
 * Laravel Framework 5.6.12
 * PHP 7.2.3
@@ -11,14 +12,19 @@ Simple social networking system using Laravel Cassanda RabbitMQ and Redis
 * Docker 18.06.0
 
 
-#####Installation:
+#### Installation:
 ```
 cd socialnetworking-laravel-cassandra/
 docker-compose up -d
 ```
 
-#####API Documentation:
-Swagger version (Coming soon!)
+#### API Documentation:
+
+(Swagger version coming soon!)
+
+##### Note
+* Every email address must be registered in advance. 
+* Make friend will also automatically subscribe to an update.
 
 <details>
 <summary><b>Register User<b></summary>
@@ -428,7 +434,3 @@ Note: the recipient email address must be a registered email address.
   ```
 </p>
 </details>
-
-##### Note
-* Every email address must be registered in advance. 
-* Make friend will also automatically subscribe to an update.
