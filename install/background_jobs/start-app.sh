@@ -5,8 +5,7 @@ crond -l 2 -f &
 
 php-fpm7
 
-# make sure cassandra and rabbitmq are ready before the daemon started
-sleep 25
-php /var/www/localhost/htdocs/artisan command:common-friends
+# give time for the cassandra to be ready
+supervisord
 
 nginx

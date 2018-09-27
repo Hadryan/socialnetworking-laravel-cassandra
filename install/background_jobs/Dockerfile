@@ -12,6 +12,14 @@ ENV BUILD_DEPS \
                 openssl-dev \
                 libuv-dev \
                 gmp-dev
+
+
+RUN mkdir /etc/supervisor.d \
+    && mkdir /var/log/supervisor
+COPY supervisord.conf /etc/supervisord.conf
+
+COPY supervisor_conf/* /etc/supervisor.d/
+
 ENV INSTALL_DIR /usr/src/datastax-php-driver
 
 RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \

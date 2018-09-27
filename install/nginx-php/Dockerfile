@@ -35,4 +35,6 @@ RUN apk add --update php7 \
         php7-curl \
         php7-tokenizer \
         nmap \
-        mysql mysql-client
+        mysql mysql-client \
+        supervisor \
+        vim
