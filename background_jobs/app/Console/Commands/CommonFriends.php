@@ -44,36 +44,40 @@ class CommonFriends extends Command
         \Log::debug("Start Rabbit consumer..");
         echo "Start Rabbit consumer..\n";
         while (true) {
-            \Amqp::consume(env('CF_QUEUE', 'cf_act'), function ($message, $resolver) use ($userModel, $userRelationModel, $cfModel) {
-                try {
-                    \Log::debug("Get " . $message->body);
+            try {
+                \Amqp::consume(env('CF_QUEUE', 'cf_act'), function ($message, $resolver) use ($userModel, $userRelationModel, $cfModel) {
+                    try {
+                        \Log::debug("Get " . $message->body);
 
-                    echo "Get " . $message->body . "\n";
-                    $body = json_decode($message->body, true);
-                    if (array_key_exists('friends', $body) && array_key_exists('type', $body)) {
-                        \Log::debug("Process " . $message->body);
+                        echo "Get " . $message->body . "\n";
+                        $body = json_decode($message->body, true);
+                        if (array_key_exists('friends', $body) && array_key_exists('type', $body)) {
+                            \Log::debug("Process " . $message->body);
 
-                        echo "Process " . $message->body . "\n";
-                        $result = $this->generate($body['friends'], $body['type'], $userModel, $userRelationModel, $cfModel);
-                        if ($result) {
-                            $resolver->acknowledge($message, ['persistent' => true]);
-                            \Log::debug("Ack " . $message->body);
-                            echo "Ack " . $message->body . "\n";
+                            echo "Process " . $message->body . "\n";
+                            $result = $this->generate($body['friends'], $body['type'], $userModel, $userRelationModel, $cfModel);
+                            if ($result) {
+                                $resolver->acknowledge($message, ['persistent' => true]);
+                                \Log::debug("Ack " . $message->body);
+                                echo "Ack " . $message->body . "\n";
+                            } else {
+                                \Log::debug("Reject " . $message->body);
+                                echo "Reject " . $message->body . "\n";
+                            }
                         } else {
-                            \Log::debug("Reject " . $message->body);
-                            echo "Reject " . $message->body . "\n";
+                            $resolver->acknowledge($message, ['persistent' => true]);
+                            \Log::debug("Ack invalid message " . $message->body);
+                            echo "Ack invalid message " . $message->body . "\n";
                         }
-                    } else {
-                        $resolver->acknowledge($message, ['persistent' => true]);
-                        \Log::debug("Ack invalid message " . $message->body);
-                        echo "Ack invalid message " . $message->body . "\n";
+                    } catch (\Exception $ex) {
+                        \Log::error($ex->getMessage());
+                        echo $ex->getMessage() . "\n";
                     }
-                } catch (\Exception $ex) {
-                    \Log::error($ex->getMessage());
-                    echo $ex->getMessage() . "\n";
-                }
-            });
-            sleep(1);
+                });
+                sleep(1);
+            } catch (\Exception $ex) {
+                
+            }
         }
         \Log::debug("End consuming");
         echo "End consuming\n";
