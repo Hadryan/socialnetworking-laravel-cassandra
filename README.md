@@ -11,8 +11,91 @@ Simple social networking system using Laravel Cassanda RabbitMQ and Redis
 * RabbitMQ 3.7.7
 * Docker 18.06.0
 
-
 #### Installation:
+* API
+  - Copy api/.env from the template
+    ```
+    cp api/.env.example api/.env
+    ```
+  - Generate APP key
+    ```
+    cd api/
+    php artisan key:generate
+    ```
+  - Download libraries
+    ```
+    cd api/
+    composer install
+    ```
+  - Update these configurations in api/.env
+    <table>
+      <tr>
+        <td>Configuration</td><td>Description</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_USERNAME</td><td>RabbitMQ username</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_PASSWORD</td><td>RabbitMQ Password</td>
+      </tr>
+    </table>
+
+    ```
+    vim api/.env
+    ```
+* Background Jobs
+  - Copy background_jobs/.env from the template
+    ```
+    cp background_jobs/.env.example background_jobs/.env
+    ```
+  - Generate APP key
+    ```
+    cd background_jobs/
+    php artisan key:generate
+    ```
+  - Download libraries
+    ```
+    cd background_jobs/
+    composer install
+    ```
+  - Update these configurations in background_jobs/.env
+    <table>
+      <tr>
+        <td>Configuration</td><td>Description</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_USERNAME</td><td>RabbitMQ username</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_PASSWORD</td><td>RabbitMQ Password</td>
+      </tr>
+    </table>
+
+    ```
+    vim background_jobs/.env
+    ```
+* Docker
+  - Copy docker-compose.yml from the template
+    ```
+    cp docker-compose.yml.example docker-compose.yml
+    ```
+  - Update these configurations in docker-compose.yml
+    <table>
+      <tr>
+        <td>Configuration</td><td>Description</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_USERNAME</td><td>RabbitMQ username</td>
+      </tr>
+      <tr>
+        <td>RABBITMQ_PASSWORD</td><td>RabbitMQ Password</td>
+      </tr>
+    </table>
+
+    ```
+    vim docker-compose.yml
+    ```
+#### Development:
 ```
 cd socialnetworking-laravel-cassandra/
 docker-compose up -d
